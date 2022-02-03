@@ -1,0 +1,49 @@
+.section-heading {
+  font-size: 2.5rem;
+}
+
+.card {
+  border: none;
+  transition: all 0.5s ease;
+  position: relative;
+  img {
+    height: 22rem;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  .card-body {
+    h3 {
+      Link {
+        text-decoration: none !important;
+      }
+    }
+    .cart {
+      position: absolute;
+      right: 0;
+      bottom: -1rem;
+      padding: 0.8rem;
+      cursor: pointer;
+    }
+    svg {
+      width: 1.5rem;
+    }
+  }
+
+  span {
+    position: absolute;
+    left: -1.35rem;
+    font-size: 1.4rem;
+    top: 3rem;
+    padding: 0.8rem 1.6rem;
+    transform: rotate(90deg);
+  }
+
+  &:hover {
+    box-shadow: 0 1.2rem 3.2rem #3333331a;
+  }
+}
