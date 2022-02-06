@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -29,9 +30,11 @@ const Hero = () => {
             <button type="button" className="hero-btn discover">
               Discover
             </button>
-            <button type="button" className="hero-btn shopnow">
-              Shop Now
-            </button>
+            <Link to="/shop">
+              <button type="button" className="hero-btn shopnow">
+                Shop Now
+              </button>
+            </Link>
           </div>
           <div className="hero-image">
             <img

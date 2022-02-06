@@ -1,5 +1,8 @@
 import {
   ADD_TO_CART_SUCCESS,
+  ALL_PRODUCT_FAIL,
+  ALL_PRODUCT_REQUEST,
+  ALL_PRODUCT_SUCCESS,
   FEATURED_PRODUCT_FAIL,
   FEATURED_PRODUCT_REQUEST,
   FEATURED_PRODUCT_SUCCESS,
@@ -28,6 +31,26 @@ export const featuredProductReducers = (state = { products: [] }, action) => {
         resultPerPage: action.payload.resultPerPage,
       };
     case FEATURED_PRODUCT_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const allProductReducers = (state = { products: [] }, action) => {
+  switch (action.type) {
+    case ALL_PRODUCT_REQUEST:
+      return { loading: true, products: [] };
+    case ALL_PRODUCT_SUCCESS:
+      return {
+        loading: false,
+        products: action.payload.products,
+        totalProducts: action.payload.totalProducts,
+        result: action.payload.result,
+        resultPerPage: action.payload.resultPerPage,
+        colors: action.payload.colors,
+      };
+    case ALL_PRODUCT_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
@@ -90,7 +113,7 @@ export const addToCartReducers = (state = { cartItems: [] }, action) => {
         return {
           ...state,
           cartItems: state.cartItems.map((pd) =>
-            pd._id === item._id ? item : pd
+            pd._id === existProduct._id ? item : pd
           ),
         };
       } else {

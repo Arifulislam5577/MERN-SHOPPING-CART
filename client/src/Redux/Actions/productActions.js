@@ -9,9 +9,13 @@ import {
   NEW_ARRIVAL_PRODUCT_FAIL,
   NEW_ARRIVAL_PRODUCT_REQUEST,
   NEW_ARRIVAL_PRODUCT_SUCCESS,
+  REMOVE_FROM_CART,
   SINGLE_PRODUCT_FAIL,
   SINGLE_PRODUCT_REQUEST,
   SINGLE_PRODUCT_SUCCESS,
+  ALL_PRODUCT_REQUEST,
+  ALL_PRODUCT_SUCCESS,
+  ALL_PRODUCT_FAIL,
 } from "../Constants/constants";
 import axios from "axios";
 
@@ -42,6 +46,41 @@ export const featuredAction = () => async (dispatch) => {
     });
   }
 };
+
+export const allProductAction =
+  (keyword = " ", pageNum = 1, price = 5000, color) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ALL_PRODUCT_REQUEST });
+
+      let api = `http://localhost:5000/api/v1/products?keyword=${keyword}&page=${pageNum}&price[lte]=${price}`;
+
+      if (color) {
+        api = `http://localhost:5000/api/v1/products?keyword=${keyword}&page=${pageNum}&price[lte]=${price}&color=${color}`;
+      }
+
+      const { data } = await axios.get(api);
+
+      dispatch({
+        type: ALL_PRODUCT_SUCCESS,
+        payload: {
+          products: data.products,
+          totalProducts: data.totalProducts,
+          result: data.result,
+          resultPerPage: data.resultPerPage,
+          colors: data.colors,
+        },
+      });
+    } catch (error) {
+      dispatch({
+        type: ALL_PRODUCT_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.response,
+      });
+    }
+  };
 
 export const arrivalAction = () => async (dispatch) => {
   try {
@@ -145,8 +184,10 @@ export const addToCartAction =
     );
   };
 
-//  dispatch({ type: REMOVE_FROM_CART, payload: id });
-//  localStorage.setItem(
-//    "cartItems",
-//    JSON.stringify(getState().addToCartProducts.cartItems)
-//  );
+export const removeFromCart = (id) => async (dispatch, getState) => {
+  dispatch({ type: REMOVE_FROM_CART, payload: id });
+  localStorage.setItem(
+    "cartItems",
+    JSON.stringify(getState().addToCartProducts.cartItems)
+  );
+};

@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import {
   addToCartReducers,
+  allProductReducers,
   arrivalProductReducers,
   featuredProductReducers,
   hotProductReducers,
@@ -15,6 +16,7 @@ const rootReducers = combineReducers({
   hotProducts: hotProductReducers,
   singleProduct: singleProductReducers,
   addToCartProducts: addToCartReducers,
+  allProduct: allProductReducers,
 });
 
 const cartItemsProductFromLocalStorage = localStorage.getItem("cartItems")

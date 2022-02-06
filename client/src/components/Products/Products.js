@@ -23,7 +23,7 @@ const Products = () => {
         <div className="text-center py-5">
           <h2 className="text-uppercase section-heading">Products</h2>
         </div>
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-5">
+        <div className="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-5">
           {error ? (
             <h1>Product not found</h1>
           ) : loading ? (
