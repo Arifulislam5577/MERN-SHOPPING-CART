@@ -16,6 +16,7 @@ import {
   SINGLE_PRODUCT_FAIL,
   SINGLE_PRODUCT_REQUEST,
   SINGLE_PRODUCT_SUCCESS,
+  SAVE_SHIPPING_INFO,
 } from "../Constants/constants";
 
 export const featuredProductReducers = (state = { products: [] }, action) => {
@@ -104,7 +105,10 @@ export const singleProductReducers = (state = { product: {} }, action) => {
   }
 };
 
-export const addToCartReducers = (state = { cartItems: [] }, action) => {
+export const addToCartReducers = (
+  state = { cartItems: [], shippingInfo: {} },
+  action
+) => {
   switch (action.type) {
     case ADD_TO_CART_SUCCESS:
       const item = action.payload;
@@ -117,7 +121,10 @@ export const addToCartReducers = (state = { cartItems: [] }, action) => {
           ),
         };
       } else {
-        return { ...state, cartItems: [...state.cartItems, item] };
+        return {
+          ...state,
+          cartItems: [...state.cartItems, item],
+        };
       }
 
     case REMOVE_FROM_CART:
@@ -125,6 +132,8 @@ export const addToCartReducers = (state = { cartItems: [] }, action) => {
         ...state,
         cartItems: state.cartItems.filter((pd) => pd._id !== action.payload),
       };
+    case SAVE_SHIPPING_INFO:
+      return { ...state, shippingInfo: action.payload };
     default:
       return state;
   }

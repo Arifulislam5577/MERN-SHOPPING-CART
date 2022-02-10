@@ -179,7 +179,7 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <Link className="nav-link" to="/profile">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="#000000"
@@ -205,7 +205,7 @@ const Navbar = () => {
                     strokeWidth="8"
                   ></path>
                 </svg>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

@@ -16,6 +16,7 @@ import {
   ALL_PRODUCT_REQUEST,
   ALL_PRODUCT_SUCCESS,
   ALL_PRODUCT_FAIL,
+  SAVE_SHIPPING_INFO,
 } from "../Constants/constants";
 import axios from "axios";
 
@@ -190,4 +191,9 @@ export const removeFromCart = (id) => async (dispatch, getState) => {
     "cartItems",
     JSON.stringify(getState().addToCartProducts.cartItems)
   );
+};
+
+export const shippingInfoActions = (data) => async (dispatch) => {
+  dispatch({ type: SAVE_SHIPPING_INFO, payload: data });
+  localStorage.setItem("shippingInfo", JSON.stringify(data));
 };

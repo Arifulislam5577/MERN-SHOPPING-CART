@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import userRouter from "./routes/UserRoutes.js";
 import authRouter from "./routes/authRoutes.js";
+import paymentRouter from "./routes/paymentRoute.js";
 import productRouter from "./routes/productRoutes.js";
 import { errorHandler, notFound } from "./middlewares/errorMiddlewares.js";
 
@@ -15,6 +16,7 @@ app.use(cors());
 app.use("/api/v1/users", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/products", productRouter);
+app.use("/api/v1", paymentRouter);
 
 mongoose.connect(process.env.MONGODB_URI, () => {
   console.log("Connect to database");

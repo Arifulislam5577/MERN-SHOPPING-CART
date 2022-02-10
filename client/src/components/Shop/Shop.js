@@ -199,7 +199,7 @@ const Shop = () => {
                   role="group"
                   aria-label="First group"
                 >
-                  {pages &&
+                  {!isNaN(pages) &&
                     [...Array(pages).keys()].map((page) => {
                       return (
                         <button

@@ -25,7 +25,6 @@ export const register = asyncHandler(async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
-        password: user.password,
         isAdmin: user.isAdmin,
         token: generateToken(user._id),
       });
@@ -43,7 +42,6 @@ export const register = asyncHandler(async (req, res) => {
 export const login = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
   const user = await USER.findOne({ username });
-  console.log(user);
   if (!user) {
     res.status(401);
     throw new Error("Invalid username or password");

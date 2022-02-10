@@ -1,5 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   addToCartAction,
   removeFromCart,
@@ -7,6 +8,7 @@ import {
 
 const CartItems = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.addToCartProducts);
 
   const increaseQty = (id, qty) => {
@@ -17,6 +19,10 @@ const CartItems = () => {
   const decreaseQty = (id, qty) => {
     const newqty = qty - 1;
     dispatch(addToCartAction(id, newqty));
+  };
+
+  const handleCheck = () => {
+    navigate("/checkout");
   };
 
   return (
@@ -217,6 +223,7 @@ const CartItems = () => {
               <button
                 className="btn btn-primary text-light fw-bold rounded-0 btn-lg p-3 px-5"
                 disabled={cartItems.length === 0}
+                onClick={handleCheck}
               >
                 Checkout
               </button>

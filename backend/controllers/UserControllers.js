@@ -2,6 +2,10 @@ import USER from "../model/USER.js";
 import asyncHandler from "express-async-handler";
 import { generateToken } from "../utils/generateToken.js";
 
+// @ UPDATE USER INFO
+// @ /api/v1/users/:ID
+// @ PRIVATE
+
 export const updateUserInfo = asyncHandler(async (req, res) => {
   const user = await USER.findById(req.user._id);
 
@@ -19,6 +23,21 @@ export const updateUserInfo = asyncHandler(async (req, res) => {
       isAdmin: updatedUser.isAdmin,
       token: generateToken(updatedUser._id),
     });
+  } else {
+    res.status(400);
+    throw new Error("User Not found");
+  }
+});
+
+// @ USER INFO
+// @ /api/v1/users/:ID
+// @ PRIVATE
+
+export const getUserInfo = asyncHandler(async (req, res) => {
+  const user = await USER.findById(req.user._id);
+
+  if (user) {
+    res.status(200).json(user);
   } else {
     res.status(400);
     throw new Error("User Not found");
