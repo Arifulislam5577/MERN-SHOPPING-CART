@@ -1,22 +1,21 @@
 import express from "express";
 import Stripe from "stripe";
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const router = express.Router();
 
-import { verifyToken } from "../utils/verifyToken.js";
-
-router.post("/payment", verifyToken, (req, res) => {
+router.post("/payment", (req, res) => {
   stripe.charges.create(
     {
       source: req.body.tokenId,
       amount: req.body.amount,
       currency: "usd",
+      apiKey: process.env.STRIPE_SECRET_KEY,
     },
-    (err, response) => {
+    (err, result) => {
       if (err) {
-        res.status(404).json({ message: err.message });
+        return res.status(500).json(err);
       } else {
-        res.status(200).json(response);
+        return res.status(200).json(result);
       }
     }
   );

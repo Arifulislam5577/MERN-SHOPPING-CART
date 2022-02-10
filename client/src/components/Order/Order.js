@@ -5,9 +5,7 @@ import { useNavigate } from "react-router-dom";
 import StripeCheckout from "react-stripe-checkout";
 
 const Order = () => {
-  const key = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
   const [paySuccess, setPaySuccess] = useState(false);
-  const [Stripetoken, setStripetoken] = useState(null);
 
   const navigate = useNavigate();
   const { cartItems, shippingInfo } = useSelector(
@@ -44,39 +42,33 @@ const Order = () => {
     );
     navigate("/order/confirm");
   };
+  const [Stripetoken, setStripetoken] = useState(null);
 
   const onToken = (token) => {
     setStripetoken(token);
   };
 
-  useEffect(() => {
-    if (!cartItems.length) {
-      navigate("/");
-    }
-  }, [cartItems.length, navigate]);
+  console.log(Stripetoken);
 
   useEffect(() => {
-    const stripebcend = async () => {
+    const makeRequest = async () => {
       try {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-        };
-        const res = await axios.post(
+        const { data } = await axios.post(
           "http://localhost:5000/api/v1/payment",
-          { tokenId: Stripetoken.id, amount: totalPrice },
-          config
+          {
+            tokenId: Stripetoken.id,
+            amount: totalPrice,
+          }
         );
-
-        console.log(res);
+        console.log(data);
       } catch (error) {
         console.log(error);
       }
     };
-    Stripetoken && stripebcend();
-  }, [Stripetoken, totalPrice, userInfo.token]);
-  console.log(Stripetoken);
+
+    Stripetoken && makeRequest();
+  }, [Stripetoken, totalPrice]);
+
   return (
     <section className="py-5 checkout">
       <div className="container">
@@ -213,7 +205,7 @@ const Order = () => {
                     description={`You total is $${totalPrice}`}
                     amount={totalPrice * 100}
                     token={onToken}
-                    stripeKey={key}
+                    stripeKey={process.env.REACT_APP_STRIPE_KEY}
                   >
                     <button className="btn-primary text-light text-uppercase btn-lg-rounded-0 p-4 fs-4 fw-bold px-5 w-100 border border-0">
                       Pay Now
