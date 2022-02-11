@@ -6,30 +6,21 @@ const stripe = new Stripe(
 );
 const router = express.Router();
 
-router.post("/payment", async (req, res) => {
-  try {
-    const { amount, token } = req.body;
-
-    const customer = await stripe.customers.create({
-      email: token.email,
-      source: token.id,
-    });
-
-    const idempotencyKey = uuidv4();
-    const charge = await stripe.charges.create(
-      {
-        amount: amount * 100,
-        currency: "usd",
-        customer: customer.id,
-        receipt_email: token.email,
-      },
-      {
-        idempotencyKey,
+router.post("/payment", (req, res) => {
+  stripe.charges.create(
+    {
+      source: req.body.tokenId,
+      amount: req.body.amount * 100,
+      currency: "usd",
+    },
+    (err, result) => {
+      if (err) {
+        return res.status(500).json(err);
+      } else {
+        return res.status(200).json(result);
       }
-    );
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
+    }
+  );
 });
 
 export default router;

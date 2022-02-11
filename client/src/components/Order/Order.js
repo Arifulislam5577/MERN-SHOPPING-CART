@@ -48,16 +48,19 @@ const Order = () => {
     setStripetoken(token);
   };
 
+  console.log(Stripetoken);
+
   useEffect(() => {
     const makeRequest = async () => {
       try {
         const { data } = await axios.post(
           "http://localhost:5000/api/v1/payment",
           {
-            token: Stripetoken,
+            tokenId: Stripetoken.id,
             amount: totalPrice,
           }
         );
+        console.log(data);
         data && setPaySuccess(true);
       } catch (error) {
         console.log(error);
