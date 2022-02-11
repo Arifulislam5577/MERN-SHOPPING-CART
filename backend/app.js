@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+dotenv.config();
+
 import cors from "cors";
 import userRouter from "./routes/UserRoutes.js";
 import authRouter from "./routes/authRoutes.js";
@@ -9,7 +11,6 @@ import productRouter from "./routes/productRoutes.js";
 import { errorHandler, notFound } from "./middlewares/errorMiddlewares.js";
 
 const app = express();
-dotenv.config();
 app.use(express.json());
 app.use(cors());
 
