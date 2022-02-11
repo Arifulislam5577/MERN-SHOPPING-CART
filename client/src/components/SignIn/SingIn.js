@@ -1,21 +1,44 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Loader from "../Loader/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { userSignUpAction } from "../../Redux/Actions/userActions";
 
 const SingIn = () => {
-  const { userInfo, loading, error } = useSelector((state) => state.userSignup);
-  const dispatch = useDispatch();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState(null);
 
-  const [username, setUsername] = useState(userInfo?.username);
-  const [email, setEmail] = useState(userInfo?.email);
-  const [password, setPassword] = useState(userInfo?.password);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const userSignUp = useSelector((state) => state.userSignup);
+  const { userInfo, loading, error } = userSignUp;
+
+  const { search } = useLocation();
+  const redirectInUrl = new URLSearchParams(search).get("redirect");
+  const redirect = redirectInUrl ? redirectInUrl : "/";
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(userSignUpAction(username, email, password));
+
+    if (username.length <= 4) {
+      setMessage("Username must be at least 4 characters");
+    } else if (password.length <= 5) {
+      setMessage("Password must be at least 6 characters");
+    } else {
+      dispatch(userSignUpAction(username, email, password));
+      setMessage("");
+    }
   };
+
+  useEffect(() => {
+    if (Object.keys(userInfo ? userInfo : {}).length > 0) {
+      navigate(redirect);
+    }
+  }, [navigate, userInfo, redirect]);
+
   return (
     <section className="py-5">
       <div className="container">
@@ -28,6 +51,12 @@ const SingIn = () => {
             {error && (
               <h2 className="p-3 bg-danger text-center text-light"> {error}</h2>
             )}
+            {message && (
+              <h2 className="p-3 bg-danger text-center text-light">
+                {message}
+              </h2>
+            )}
+
             <div className="col-md-12">
               <label htmlFor="inputEmail" className="form-label fs-5">
                 USERNAME
@@ -70,12 +99,13 @@ const SingIn = () => {
             <div className="col-12">
               <button
                 type="submit"
-                className="btn btn-primary p-3 rounded-0 fs-5 px-5"
+                className="btn btn-primary p-3 rounded-0 fs-5 px-5 w-100"
               >
                 Sign in
               </button>
               <p className="fs-5 my-3">
-                Have already an account? <Link to="/login">Login</Link>
+                Have already an account?
+                <Link to={`/login?redirect=${redirect}`}>Login</Link>
               </p>
             </div>
           </form>

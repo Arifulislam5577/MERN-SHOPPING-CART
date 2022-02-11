@@ -1,16 +1,11 @@
 import React from "react";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-const PrivateRoute = () => {
-  const location = useLocation();
-  const userInfo = localStorage.getItem("userInfo")
-    ? JSON.parse(localStorage.getItem("userInfo"))
-    : {};
-  return userInfo && Object.keys(userInfo).length > 0 ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/login" replace state={{ from: location }} />
-  );
+const PrivateRoute = ({ children }) => {
+  const { userInfo } = useSelector((state) => state.userLogin);
+
+  return userInfo ? children : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;

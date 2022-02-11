@@ -22,7 +22,7 @@ const CartItems = () => {
   };
 
   const handleCheck = () => {
-    navigate("/checkout");
+    navigate("/login?redirect=/checkout");
   };
 
   return (

@@ -27,12 +27,26 @@ function App() {
         </Route>
         <Route path="/product/:id" element={<ProductDetials />} />
 
-        <Route path="/*" element={<PrivateRoute />}>
-          <Route path="profile" element={<Profile />} />
-          <Route path="checkout" element={<Checkout />} />
+        {/* <Route path="/*" element={<PrivateRoute />}>
           <Route path="shipping" element={<Shipping />} />
           <Route path="order" element={<Order />} />
-        </Route>
+        </Route> */}
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <PrivateRoute>
+              <Checkout />
+            </PrivateRoute>
+          }
+        />
       </Routes>
       <Footer />
     </Router>

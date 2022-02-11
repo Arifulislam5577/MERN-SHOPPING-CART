@@ -1,45 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {
-  userLogOutAction,
+  userDetailsActions,
   userUpdateActions,
 } from "../../Redux/Actions/userActions";
 
 import Loader from "../Loader/Loader";
 const Profile = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { userInfo, loading, error } = useSelector((state) => state.userLogin);
+  const userLogIn = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogIn;
+  const userDetails = useSelector((state) => state.userDetails);
+  const { user, loading, error } = userDetails;
   const { sucess, loading: isLoading } = useSelector(
     (state) => state.userUpdate
   );
-  const [username, setUsername] = useState(userInfo.username);
-  const [email, setEmail] = useState(userInfo.email);
-  const [password, setPassword] = useState("");
-  const [cpassword, setcPassword] = useState("");
-  const [message, setMessage] = useState("");
 
-  const handleLogOut = (e) => {
-    e.preventDefault();
-    dispatch(userLogOutAction());
-    navigate("/");
-  };
+  const [username, setUsername] = useState(user?.username);
+  const [email, setEmail] = useState(user?.email);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState(null);
+
+  const dispatch = useDispatch();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password !== cpassword) {
-      setMessage("Passwords don't match");
+
+    if (password !== confirmPassword) {
+      setMessage("Password Does not match");
+    } else if (password === confirmPassword && password.length <= 5) {
+      setMessage("Password must be at least 6 characters");
+    } else if (username.length <= 4) {
+      setMessage("Username must be at least 4 characters");
     } else {
       dispatch(userUpdateActions(userInfo._id, username, email, password));
       setMessage("");
-
-      setTimeout(() => {
-        if (sucess) {
-          navigate("/login");
-        }
-      }, 2000);
     }
   };
+
+  useEffect(() => {
+    dispatch(userDetailsActions(userInfo._id));
+  }, [dispatch, userInfo._id]);
 
   return (
     <section className="profile py-5">
@@ -102,6 +103,7 @@ const Profile = () => {
                   className="form-control p-3 rounded-0 fs-4"
                   id="inputPassword4"
                   required
+                  placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -115,22 +117,17 @@ const Profile = () => {
                   className="form-control p-3 rounded-0 fs-4"
                   id="inputPassword"
                   required
-                  value={cpassword}
-                  onChange={(e) => setcPassword(e.target.value)}
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </div>
               <div className="col-12">
                 <button
                   type="submit"
-                  className="btn btn-primary p-3 rounded-0 fs-5 px-5 w-50"
+                  className="btn btn-primary p-3 rounded-0 fs-5 px-5 w-100"
                 >
                   Update
-                </button>
-                <button
-                  onClick={handleLogOut}
-                  className="btn btn-danger p-3 rounded-0 fs-5 px-5 w-50"
-                >
-                  Log Out
                 </button>
               </div>
             </form>

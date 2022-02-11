@@ -17,9 +17,8 @@ import {
 
 export const userSignUpAction =
   (username, email, password) => async (dispatch) => {
+    dispatch({ type: USER_SIGNUP_REQUEST, payload: { username, password } });
     try {
-      dispatch({ type: USER_SIGNUP_REQUEST });
-
       const config = {
         headers: {
           "Content-type": "application/json",
@@ -36,6 +35,7 @@ export const userSignUpAction =
         type: USER_SIGNUP_SUCCESS,
         payload: data,
       });
+      dispatch({ type: LOG_IN_SUCCESS, payload: data });
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
       dispatch({
@@ -49,8 +49,8 @@ export const userSignUpAction =
   };
 
 export const userLoginActions = (username, password) => async (dispatch) => {
+  dispatch({ type: LOG_IN_REQUEST, payload: { username, password } });
   try {
-    dispatch({ type: LOG_IN_REQUEST });
     const config = {
       headers: {
         "Content-type": "application/json",
@@ -82,12 +82,11 @@ export const userLogOutAction = () => async (dispatch) => {
 };
 
 export const userDetailsActions = (id) => async (dispatch, getState) => {
+  dispatch({ type: USER_DETAILS_REQUEST, payload: id });
+  const {
+    userLogin: { userInfo },
+  } = getState();
   try {
-    dispatch({ type: USER_DETAILS_REQUEST });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
     const config = {
       headers: {
         "Content-type": "application/json",
@@ -101,7 +100,6 @@ export const userDetailsActions = (id) => async (dispatch, getState) => {
     );
 
     dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
-    localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_DETAILS_FAIL,

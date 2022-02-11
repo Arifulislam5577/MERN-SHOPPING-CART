@@ -1,11 +1,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { userLogOutAction } from "../../Redux/Actions/userActions";
 import CartItems from "../Cart/CartItems";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [navbarBg, setNavbarbg] = useState(false);
+  const userLogIn = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogIn;
+
   window.addEventListener("scroll", (e) => {
     if (window.scrollY > 0) {
       setNavbarbg(true);
@@ -14,6 +21,12 @@ const Navbar = () => {
     }
   });
   const { cartItems } = useSelector((state) => state.addToCartProducts);
+
+  const handleLogOut = () => {
+    dispatch(userLogOutAction());
+    navigate("/");
+  };
+
   return (
     <>
       <nav
@@ -179,33 +192,68 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/profile">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#000000"
-                  viewBox="0 0 256 256"
-                >
-                  <rect width="256" height="256" fill="none"></rect>
-                  <circle
-                    cx="128"
-                    cy="96"
-                    r="64"
-                    fill="none"
-                    stroke="#000000"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="8"
-                  ></circle>
-                  <path
-                    d="M31,216a112,112,0,0,1,194,0"
-                    fill="none"
-                    stroke="#000000"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="8"
-                  ></path>
-                </svg>
-              </Link>
+              {userInfo ? (
+                <div className="dropdown ">
+                  <button
+                    className="btn btn-outline-primary p-2 px-4 dropdown-toggle text-uppercase rounded-0"
+                    type="button"
+                    id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {userInfo.username}
+                  </button>
+                  <ul
+                    className="dropdown-menu bg-light m-0 p-0"
+                    aria-labelledby="dropdownMenuButton1"
+                  >
+                    <li>
+                      <Link
+                        className="dropdown-item fs-5 p-2 bg-outline-primary"
+                        to="/profile"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        className="dropdown-item fs-5 p-2 text-danger"
+                        onClick={handleLogOut}
+                      >
+                        Log Out
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              ) : (
+                <NavLink to="/login" className="nav-link ">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="#000000"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <circle
+                      cx="128"
+                      cy="96"
+                      r="64"
+                      fill="none"
+                      stroke="#000000"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="8"
+                    ></circle>
+                    <path
+                      d="M31,216a112,112,0,0,1,194,0"
+                      fill="none"
+                      stroke="#000000"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="8"
+                    ></path>
+                  </svg>
+                </NavLink>
+              )}
             </li>
           </ul>
         </div>

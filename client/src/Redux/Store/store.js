@@ -11,8 +11,8 @@ import {
 } from "../Reducers/productReducers";
 import {
   userDetailsReducers,
-  userLoginReducers,
   userSignUpReducer,
+  userLoginReducers,
   userUpdateReducers,
 } from "../Reducers/userReducers";
 
@@ -23,8 +23,8 @@ const rootReducers = combineReducers({
   singleProduct: singleProductReducers,
   addToCartProducts: addToCartReducers,
   allProduct: allProductReducers,
-  userSignup: userSignUpReducer,
   userLogin: userLoginReducers,
+  userSignup: userSignUpReducer,
   userDetails: userDetailsReducers,
   userUpdate: userUpdateReducers,
 });

@@ -1,28 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { userLoginActions } from "../../Redux/Actions/userActions";
 import Loader from "../Loader/Loader";
 
 const LogIn = () => {
-  const { userInfo, loading, error } = useSelector((state) => state.userLogin);
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const navigate = useNavigate();
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { userInfo, loading, error } = useSelector((state) => state.userLogin);
+
+  const { search } = useLocation();
+  const redirectInUrl = new URLSearchParams(search).get("redirect");
+  const redirect = redirectInUrl ? redirectInUrl : "/";
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(userLoginActions(username, password));
-
-    setTimeout(() => {
-      if (location.state?.from) {
-        navigate(location.state.from.pathname);
-      }
-    }, 2000);
   };
+
+  useEffect(() => {
+    if (Object.keys(userInfo ? userInfo : {}).length > 0) {
+      navigate(redirect);
+    }
+  }, [navigate, userInfo, redirect]);
 
   return (
     <section className="py-5">
@@ -47,7 +51,7 @@ const LogIn = () => {
               </label>
               <input
                 type="text"
-                className="form-control p-3 rounded-0"
+                className="form-control p-3 rounded-0 fs-4"
                 id="inputEmail4"
                 required
                 value={username}
@@ -60,7 +64,7 @@ const LogIn = () => {
               </label>
               <input
                 type="password"
-                className="form-control p-3 rounded-0"
+                className="form-control p-3 rounded-0 fs-4"
                 id="inputPassword4"
                 required
                 value={password}
@@ -75,7 +79,8 @@ const LogIn = () => {
                 Login
               </button>
               <p className="fs-5 my-3">
-                Create a new account <Link to="/signin">SignUp</Link>
+                Create a new account ?
+                <Link to={`/signin?redirect=${redirect}`}> SignUp</Link>
               </p>
             </div>
           </form>

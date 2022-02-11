@@ -36,19 +36,14 @@ const Order = () => {
       totalPrice,
     };
 
-    sessionStorage.setItem(
-      "orderCalculation",
-      JSON.stringify(orderCalculation)
-    );
     navigate("/order/confirm");
+    sessionStorage.clear();
   };
   const [Stripetoken, setStripetoken] = useState(null);
 
   const onToken = (token) => {
     setStripetoken(token);
   };
-
-  console.log(Stripetoken);
 
   useEffect(() => {
     const makeRequest = async () => {
@@ -60,12 +55,12 @@ const Order = () => {
             amount: totalPrice,
           }
         );
-        console.log(data);
-        data && setPaySuccess(true);
+        sessionStorage.setItem("isPaid", JSON.stringify(data?.paid));
       } catch (error) {
         console.log(error);
       }
     };
+    JSON.parse(sessionStorage.getItem("isPaid")) && setPaySuccess(true);
 
     Stripetoken && makeRequest();
   }, [Stripetoken, totalPrice]);
