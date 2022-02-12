@@ -24,7 +24,7 @@ const SingIn = () => {
     e.preventDefault();
 
     if (username.length <= 4) {
-      setMessage("Username must be at least 4 characters");
+      setMessage("Username must be at least 5 characters");
     } else if (password.length <= 5) {
       setMessage("Password must be at least 6 characters");
     } else {

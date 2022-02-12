@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import StripeCheckout from "react-stripe-checkout";
+import { orderCreate } from "../../Redux/Actions/orderActions";
+import Loader from "../Loader/Loader";
 
 const Order = () => {
-  const [paySuccess, setPaySuccess] = useState(false);
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { cartItems, shippingInfo } = useSelector(
     (state) => state.addToCartProducts
   );
   const { userInfo } = useSelector((state) => state.userLogin);
+  const { order, success, error, loading } = useSelector(
+    (state) => state.createOrder
+  );
   const numburFormat = (num) => {
     return ((num * 100) / 100).toFixed(2);
   };
@@ -28,117 +31,188 @@ const Order = () => {
   );
 
   const handleSumbit = () => {
-    navigate("/order/confirm");
-    sessionStorage.clear();
-  };
-  const [Stripetoken, setStripetoken] = useState(null);
-
-  const onToken = (token) => {
-    setStripetoken(token);
+    dispatch(
+      orderCreate({
+        orderItems: cartItems,
+        shippingAddress: shippingInfo,
+        taxPrice,
+        shippingPrice,
+        totalPrice,
+      })
+    );
   };
 
   useEffect(() => {
-    if (Object.keys(shippingInfo).length === 0) {
-      navigate("/shipping");
+    if (success) {
+      navigate(`/order/${order._id}`);
     }
-    const makeRequest = async () => {
-      try {
-        const { data } = await axios.post(
-          "http://localhost:5000/api/v1/payment",
-          {
-            tokenId: Stripetoken.id,
-            amount: totalPrice,
-          }
-        );
-        sessionStorage.setItem("isPaid", JSON.stringify(data?.paid));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    JSON.parse(sessionStorage.getItem("isPaid")) && setPaySuccess(true);
-
-    Stripetoken && makeRequest();
-  }, [Stripetoken, totalPrice, navigate, shippingInfo]);
+    if (!itemsPrice || !cartItems.length) {
+      navigate("/");
+    }
+  }, [navigate, order, success, itemsPrice, cartItems]);
 
   return (
-    <section className="py-5 checkout">
+    <section className="py-5">
       <div className="container">
-        <div className="row">
+        <div className="row g-5">
           <div className="col-12 col-sm-12 col-md-8 col-lg-8">
             <div className="row mb-5">
-              <h2 className="text-uppercase text-primary">
-                Shipping Information
-              </h2>
-              <hr />
-              <h3 className="text-uppercase">
-                Address : {shippingInfo.address}
-              </h3>
-              <h3 className="text-uppercase">Phone : {shippingInfo.phone}</h3>
-              <h3 className="text-uppercase">City : {shippingInfo.city}</h3>
-              <h3 className="text-uppercase">
-                Country : {shippingInfo.country}
-              </h3>
-              <h2 className="text-uppercase  text-primary mt-4">
-                user Information
-              </h2>
-              <hr />
+              <div className="p-4 border border-1">
+                <table className="table table-borderless caption-top">
+                  <caption>
+                    <h2 className="text-uppercase text-primary  border-bottom pb-3">
+                      Shipping Information
+                    </h2>
+                  </caption>
+                  <tbody>
+                    <tr>
+                      <th>
+                        <h3 className="text-uppercase">Address </h3>
+                      </th>
 
-              <h3 className="text-uppercase">username : {userInfo.username}</h3>
-              <h3 className="">EMAIL ADDRESS : {userInfo.email}</h3>
+                      <td>
+                        <h3 className="text-uppercase">
+                          {shippingInfo.address}
+                        </h3>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        <h3 className="text-uppercase">Phone </h3>
+                      </th>
 
-              <h2 className="text-uppercase  text-primary mt-4">
-                order Information
-              </h2>
-              <hr />
-              <h3 className="text-uppercase">Paid : unpaid</h3>
-              <h3 className="text-uppercase">Delivered : pending</h3>
-            </div>
-            <div className="row">
-              <h2 className="text-uppercase  text-primary mt-4">
-                product Information
-              </h2>
-              <hr />
-              <table className="table table-borderless">
-                <tbody>
-                  {cartItems.map((product) => {
-                    const { title, price, qty, url, _id } = product;
-                    return (
-                      <tr
-                        style={{ verticalAlign: "middle" }}
-                        className="mb-4"
-                        key={_id}
-                      >
-                        <td>
-                          <img
-                            src={url}
-                            alt={title}
-                            style={{
-                              width: "8rem",
-                              height: "8rem",
-                              objectFit: "contain",
-                            }}
-                          />
-                        </td>
-                        <td>
-                          <h2 className="text-uppercase text-primary">
-                            {title}
-                          </h2>
-                        </td>
-                        <td>
-                          <h2 className="text-uppercase text-primary">
-                            ${price}
-                          </h2>
-                        </td>
-                        <td>
-                          <h2 className="text-uppercase text-primary">
-                            {qty} x ${price} = ${qty * price}
-                          </h2>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                      <td>
+                        <h3 className="text-uppercase">{shippingInfo.phone}</h3>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        <h3 className="text-uppercase">City </h3>
+                      </th>
+
+                      <td>
+                        <h3 className="text-uppercase">{shippingInfo.city}</h3>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        <h3 className="text-uppercase">Country </h3>
+                      </th>
+
+                      <td>
+                        <h3 className="text-uppercase">
+                          {shippingInfo.country}
+                        </h3>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="p-4 border border-1 mt-4">
+                <table className="table table-borderless caption-top">
+                  <caption>
+                    <h2 className="text-uppercase text-primary  border-bottom pb-3">
+                      user Information
+                    </h2>
+                  </caption>
+                  <tbody>
+                    <tr>
+                      <th>
+                        <h3 className="text-uppercase">username</h3>
+                      </th>
+
+                      <td>
+                        <h3 className="text-uppercase">{userInfo.username}</h3>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        <h3 className="text-uppercase">EMAIL ADDRESS</h3>
+                      </th>
+
+                      <td>
+                        <h3 className="">{userInfo.email}</h3>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="p-4 border border-1 mt-4">
+                <table className="table table-borderless caption-top">
+                  <caption>
+                    <h2 className="text-uppercase text-primary  border-bottom pb-3">
+                      order Information
+                    </h2>
+                  </caption>
+                  <tbody>
+                    <tr>
+                      <th>
+                        <h3 className="text-uppercase">Paid</h3>
+                      </th>
+
+                      <td>
+                        <h3 className="text-uppercase">unpaid</h3>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        <h3 className="text-uppercase">Delivered</h3>
+                      </th>
+
+                      <td>
+                        <h3 className="text-uppercase">pending</h3>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="p-4 border border-1 mt-4">
+                <h2 className="text-uppercase text-primary  border-bottom pb-3">
+                  product Information
+                </h2>
+
+                <table className="table table-borderless">
+                  <tbody>
+                    {cartItems.map((product) => {
+                      const { title, price, qty, url, _id } = product;
+                      return (
+                        <tr
+                          style={{ verticalAlign: "middle" }}
+                          className="mb-4"
+                          key={_id}
+                        >
+                          <td>
+                            <img
+                              src={url}
+                              alt={title}
+                              style={{
+                                width: "8rem",
+                                height: "8rem",
+                                objectFit: "contain",
+                              }}
+                            />
+                          </td>
+                          <td>
+                            <h2 className="text-uppercase text-primary">
+                              {title}
+                            </h2>
+                          </td>
+                          <td>
+                            <h2 className="text-uppercase text-primary">
+                              ${price}
+                            </h2>
+                          </td>
+                          <td>
+                            <h2 className="text-uppercase text-primary">
+                              {qty} x ${price} = ${qty * price}
+                            </h2>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
           <div className="col-12 col-sm-12 col-md-4 col-lg-4">
@@ -146,6 +220,12 @@ const Order = () => {
               <h2 className="text-uppercase p-4 bg-primary text-light text-center fw-bold">
                 order Summary
               </h2>
+              {loading && <Loader />}
+              {error && (
+                <h2 className="p-3 bg-danger text-center text-light">
+                  {error}
+                </h2>
+              )}
               <div className="items my-3 d-flex align-items-center justify-content-between">
                 <h4 className="text-uppercase text-secondary ">Total Items</h4>
                 <h4 className="text-uppercase text-secondary ">{totalItems}</h4>
@@ -177,33 +257,16 @@ const Order = () => {
                   ${totalPrice}
                 </h4>
               </div>
-              {paySuccess && (
-                <div className="price my-3 d-flex align-items-center justify-content-between">
-                  <button
-                    className="btn-primary text-light text-uppercase btn-lg-rounded-0 p-4 fs-4 fw-bold px-5 w-100 border border-0"
-                    disabled={cartItems.length === 0}
-                    onClick={handleSumbit}
-                  >
-                    Order Now
-                  </button>
-                </div>
-              )}
-              {!paySuccess && (
-                <div className="price my-3 d-flex align-items-center justify-content-between">
-                  <StripeCheckout
-                    name="E-SHOP"
-                    image="https://image.freepik.com/free-vector/shopping-supermarket-cart-with-grocery-pictogram_1284-11697.jpg?w=740"
-                    description={`You total is $${totalPrice}`}
-                    amount={totalPrice * 100}
-                    token={onToken}
-                    stripeKey={process.env.REACT_APP_STRIPE_KEY}
-                  >
-                    <button className="btn-primary text-light text-uppercase btn-lg-rounded-0 p-4 fs-4 fw-bold px-5 w-100 border border-0">
-                      Pay Now
-                    </button>
-                  </StripeCheckout>
-                </div>
-              )}
+
+              <div className="price my-3 d-flex align-items-center justify-content-between">
+                <button
+                  className="btn-primary text-light text-uppercase btn-lg-rounded-0 p-4 fs-4 fw-bold px-5 w-100 border border-0"
+                  disabled={cartItems.length === 0}
+                  onClick={handleSumbit}
+                >
+                  Order Now
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -10,10 +10,14 @@ const Shipping = () => {
   const { shippingInfo, cartItems } = useSelector(
     (state) => state.addToCartProducts
   );
-  const [address, setAddress] = useState(shippingInfo.address);
-  const [city, setCity] = useState(shippingInfo.city);
-  const [phone, setPhone] = useState(shippingInfo.phone);
-  const [country, setCountry] = useState(shippingInfo.country);
+  const [address, setAddress] = useState(
+    shippingInfo ? shippingInfo.address : ""
+  );
+  const [city, setCity] = useState(shippingInfo ? shippingInfo.city : "");
+  const [phone, setPhone] = useState(shippingInfo ? shippingInfo.phone : "");
+  const [country, setCountry] = useState(
+    shippingInfo ? shippingInfo.country : ""
+  );
 
   const countryDetail = Object.values(countries);
 

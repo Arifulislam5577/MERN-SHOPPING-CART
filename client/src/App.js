@@ -6,6 +6,7 @@ import LogIn from "./components/Login/Login";
 import Navbar from "./components/Navbar/Navbar";
 import NotFound from "./components/NotFound/NotFound";
 import Order from "./components/Order/Order";
+import OrderDetails from "./components/Order/OrderDetails";
 import PrivateRoute from "./components/PrivateRoutes/PrivateRoute";
 import ProductDetials from "./components/productDetails/ProductDetials";
 import Profile from "./components/Profile/Profile";
@@ -56,6 +57,14 @@ function App() {
           element={
             <PrivateRoute>
               <Order />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/order/:id"
+          element={
+            <PrivateRoute>
+              <OrderDetails />
             </PrivateRoute>
           }
         />

@@ -10,6 +10,8 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const [navbarBg, setNavbarbg] = useState(false);
+  const { cartItems } = useSelector((state) => state.addToCartProducts);
+
   const userLogIn = useSelector((state) => state.userLogin);
   const { userInfo } = userLogIn;
 
@@ -20,7 +22,6 @@ const Navbar = () => {
       setNavbarbg(false);
     }
   });
-  const { cartItems } = useSelector((state) => state.addToCartProducts);
 
   const handleLogOut = () => {
     dispatch(userLogOutAction());

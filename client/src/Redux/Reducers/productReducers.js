@@ -17,6 +17,7 @@ import {
   SINGLE_PRODUCT_REQUEST,
   SINGLE_PRODUCT_SUCCESS,
   SAVE_SHIPPING_INFO,
+  ORDER_COMPLETE_AND_RESET_CART,
 } from "../Constants/constants";
 
 export const featuredProductReducers = (state = { products: [] }, action) => {
@@ -132,6 +133,8 @@ export const addToCartReducers = (
         ...state,
         cartItems: state.cartItems.filter((pd) => pd._id !== action.payload),
       };
+    case ORDER_COMPLETE_AND_RESET_CART:
+      return { ...state, cartItems: [] };
     case SAVE_SHIPPING_INFO:
       return { ...state, shippingInfo: action.payload };
     default:
