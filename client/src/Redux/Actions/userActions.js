@@ -113,12 +113,12 @@ export const userDetailsActions = (id) => async (dispatch, getState) => {
 
 export const userUpdateActions =
   (id, username, email, password) => async (dispatch, getState) => {
-    try {
-      dispatch({ type: USER_UPDATE_REQUEST });
+    dispatch({ type: USER_UPDATE_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
 
-      const {
-        userLogin: { userInfo },
-      } = getState();
+    try {
       const config = {
         headers: {
           Authorization: `Bearer ${userInfo.token}`,
@@ -132,6 +132,7 @@ export const userUpdateActions =
       );
 
       dispatch({ type: USER_UPDATE_SUCCESS, payload: data });
+      dispatch({ type: LOG_IN_SUCCESS, payload: data });
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
       dispatch({

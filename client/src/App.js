@@ -27,10 +27,6 @@ function App() {
         </Route>
         <Route path="/product/:id" element={<ProductDetials />} />
 
-        {/* <Route path="/*" element={<PrivateRoute />}>
-          <Route path="shipping" element={<Shipping />} />
-          <Route path="order" element={<Order />} />
-        </Route> */}
         <Route
           path="/profile"
           element={
@@ -44,6 +40,22 @@ function App() {
           element={
             <PrivateRoute>
               <Checkout />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/shipping"
+          element={
+            <PrivateRoute>
+              <Shipping />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/order"
+          element={
+            <PrivateRoute>
+              <Order />
             </PrivateRoute>
           }
         />

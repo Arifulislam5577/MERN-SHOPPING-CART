@@ -28,14 +28,6 @@ const Order = () => {
   );
 
   const handleSumbit = () => {
-    const orderCalculation = {
-      totalItems,
-      itemsPrice,
-      taxPrice,
-      shippingPrice,
-      totalPrice,
-    };
-
     navigate("/order/confirm");
     sessionStorage.clear();
   };
@@ -46,6 +38,9 @@ const Order = () => {
   };
 
   useEffect(() => {
+    if (Object.keys(shippingInfo).length === 0) {
+      navigate("/shipping");
+    }
     const makeRequest = async () => {
       try {
         const { data } = await axios.post(
@@ -63,7 +58,7 @@ const Order = () => {
     JSON.parse(sessionStorage.getItem("isPaid")) && setPaySuccess(true);
 
     Stripetoken && makeRequest();
-  }, [Stripetoken, totalPrice]);
+  }, [Stripetoken, totalPrice, navigate, shippingInfo]);
 
   return (
     <section className="py-5 checkout">
