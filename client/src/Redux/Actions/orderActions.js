@@ -11,6 +11,9 @@ import {
   ORDER_UPDATE_FAIL,
   ORDER_UPDATE_REQUEST,
   ORDER_UPDATE_SUCCESS,
+  USER_ORDER_FAIL,
+  USER_ORDER_REQUEST,
+  USER_ORDER_SUCCESS,
 } from "../Constants/constants";
 
 export const orderCreate = (newOrder) => async (dispatch, getState) => {
@@ -109,3 +112,33 @@ export const OrderUpdate =
       });
     }
   };
+
+export const getUserOrder = () => async (dispatch, getState) => {
+  dispatch({ type: USER_ORDER_REQUEST });
+  const {
+    userLogin: { userInfo },
+  } = getState();
+  try {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(
+      `http://localhost:5000/api/v1/order`,
+      config
+    );
+
+    dispatch({ type: USER_ORDER_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_ORDER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.response,
+    });
+  }
+};

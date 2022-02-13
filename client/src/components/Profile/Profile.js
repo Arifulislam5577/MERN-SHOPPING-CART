@@ -4,12 +4,16 @@ import {
   userDetailsActions,
   userUpdateActions,
 } from "../../Redux/Actions/userActions";
+import { getUserOrder } from "../../Redux/Actions/orderActions";
 
 import Loader from "../Loader/Loader";
 const Profile = () => {
   const userLogIn = useSelector((state) => state.userLogin);
   const { userInfo } = userLogIn;
   const userDetails = useSelector((state) => state.userDetails);
+  const userOrder = useSelector((state) => state.userOrder);
+
+  const { order, error: orderError, loading: orderLoading } = userOrder;
   const { user, loading, error } = userDetails;
   const { sucess, loading: isLoading } = useSelector(
     (state) => state.userUpdate
@@ -45,6 +49,7 @@ const Profile = () => {
       setUsername(user.username);
       setEmail(user.email);
     }
+    dispatch(getUserOrder());
   }, [dispatch, userInfo._id, user]);
 
   return (
@@ -140,7 +145,42 @@ const Profile = () => {
             </div>
           </div>
           <div className="col-12 col-sm-12 col-md-6 col-lg-8">
-            <h1>Order Info</h1>
+            <h1 className=" bg-primary p-3  text-light mb-4 text-uppercase">
+              order Info
+            </h1>
+            {orderLoading ? (
+              <Loader />
+            ) : orderError ? (
+              <h1 className=" bg-danger p-3  text-light mb-4 text-uppercase">
+                {orderError}
+              </h1>
+            ) : (
+              <>
+                <table className="table table-borderless">
+                  <thead>
+                    <tr>
+                      <th scope="col">Order ID</th>
+                      <th scope="col">Total Items</th>
+                      <th scope="col">Total Price</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {order?.map((orderItems) => {
+                      const { _id, orderCalculation, isDelivered } = orderItems;
+                      return (
+                        <tr key={_id} style={{ fontSize: "1.4rem" }}>
+                          <td>#{_id}</td>
+                          <td>{orderCalculation?.totalItems}</td>
+                          <td>${orderCalculation?.totalPrice}</td>
+                          <td>{isDelivered ? "Delivered" : "Pending"}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </>
+            )}
           </div>
         </div>
       </div>
