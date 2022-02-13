@@ -317,6 +317,13 @@ svg {
 }
 .orderDetails {
   min-height: 60vh;
+
+  .price {
+    span {
+      display: block;
+      width: 100%;
+    }
+  }
 }
 
 footer {

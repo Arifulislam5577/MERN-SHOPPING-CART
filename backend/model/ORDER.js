@@ -26,10 +26,20 @@ const orderSchema = new mongoose.Schema(
       phone: { type: String, required: true },
       country: { type: String, required: true },
     },
-    taxPrice: { type: Number, required: true },
-    shippingPrice: { type: Number, required: true },
+    orderCalculation: {
+      totalItems: { type: Number, required: true },
+      itemsPrice: { type: Number, required: true },
+      taxPrice: { type: Number, required: true },
+      shippingPrice: { type: Number, required: true },
+      totalPrice: { type: Number, required: true },
+    },
+    paymentResult: {
+      id: { type: String },
+      status: { type: String },
+      email_address: { type: String },
+      payTime: { type: Date, default: Date.now() },
+    },
 
-    totalPrice: { type: Number, required: true },
     isPaid: { type: Boolean, default: false },
     paidAt: {
       type: Date,

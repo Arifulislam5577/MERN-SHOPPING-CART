@@ -7,6 +7,10 @@ import {
   ORDER_DETAILS_FAIL,
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_SUCCESS,
+  ORDER_RESET,
+  ORDER_UPDATE_FAIL,
+  ORDER_UPDATE_REQUEST,
+  ORDER_UPDATE_SUCCESS,
 } from "../Constants/constants";
 
 export const orderCreate = (newOrder) => async (dispatch, getState) => {
@@ -72,3 +76,36 @@ export const getOrder = (id) => async (dispatch, getState) => {
     });
   }
 };
+
+export const OrderUpdate =
+  (id, paymentResult) => async (dispatch, getState) => {
+    dispatch({ type: ORDER_UPDATE_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.patch(
+        `http://localhost:5000/api/v1/order/${id}`,
+        paymentResult,
+        config
+      );
+
+      dispatch({ type: ORDER_UPDATE_SUCCESS, payload: data });
+      dispatch({ type: ORDER_RESET });
+    } catch (error) {
+      dispatch({
+        type: ORDER_UPDATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.response,
+      });
+    }
+  };

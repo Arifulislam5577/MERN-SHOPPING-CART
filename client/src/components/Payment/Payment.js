@@ -34,7 +34,6 @@ const Payment = () => {
             amount: totalPrice,
           }
         );
-        sessionStorage.setItem("isPaid", JSON.stringify(data?.paid));
       } catch (error) {
         console.log(error);
       }

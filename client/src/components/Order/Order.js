@@ -25,19 +25,27 @@ const Order = () => {
     cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
   );
   const taxPrice = numburFormat(itemsPrice * 0.05);
+
   const shippingPrice = numburFormat(itemsPrice > 500 ? 0 : 25);
+
   const totalPrice = numburFormat(
     itemsPrice * 1 + taxPrice * 1 + shippingPrice * 1
   );
+
+  const orderCalculation = {
+    totalItems: parseFloat(totalItems),
+    itemsPrice: parseFloat(itemsPrice),
+    taxPrice: parseFloat(taxPrice),
+    shippingPrice: parseFloat(shippingPrice),
+    totalPrice: parseFloat(totalPrice),
+  };
 
   const handleSumbit = () => {
     dispatch(
       orderCreate({
         orderItems: cartItems,
         shippingAddress: shippingInfo,
-        taxPrice,
-        shippingPrice,
-        totalPrice,
+        orderCalculation,
       })
     );
   };
@@ -222,9 +230,9 @@ const Order = () => {
               </h2>
               {loading && <Loader />}
               {error && (
-                <h2 className="p-3 bg-danger text-center text-light">
+                <h4 className="p-3 bg-danger text-center text-light">
                   {error}
-                </h2>
+                </h4>
               )}
               <div className="items my-3 d-flex align-items-center justify-content-between">
                 <h4 className="text-uppercase text-secondary ">Total Items</h4>
