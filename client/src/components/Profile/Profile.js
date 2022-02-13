@@ -166,17 +166,30 @@ const Profile = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {order?.map((orderItems) => {
-                      const { _id, orderCalculation, isDelivered } = orderItems;
-                      return (
-                        <tr key={_id} style={{ fontSize: "1.4rem" }}>
-                          <td>#{_id}</td>
-                          <td>{orderCalculation?.totalItems}</td>
-                          <td>${orderCalculation?.totalPrice}</td>
-                          <td>{isDelivered ? "Delivered" : "Pending"}</td>
-                        </tr>
-                      );
-                    })}
+                    {order?.length === 0 ? (
+                      <h1 className=" bg-light p-3  text-primary mt-4 text-uppercase">
+                        No Order Available
+                      </h1>
+                    ) : (
+                      order?.map((orderItems) => {
+                        const { _id, orderCalculation, isDelivered } =
+                          orderItems;
+                        return (
+                          <tr
+                            key={_id}
+                            style={{
+                              fontSize: "1.4rem",
+                              verticalAlign: "middle",
+                            }}
+                          >
+                            <td>#{_id}</td>
+                            <td>{orderCalculation?.totalItems}</td>
+                            <td>${orderCalculation?.totalPrice}</td>
+                            <td>{isDelivered ? "Delivered" : "Pending"}</td>
+                          </tr>
+                        );
+                      })
+                    )}
                   </tbody>
                 </table>
               </>
