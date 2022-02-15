@@ -216,6 +216,16 @@ const Navbar = () => {
                         Profile
                       </Link>
                     </li>
+                    {userInfo.isAdmin && (
+                      <li>
+                        <Link
+                          className="dropdown-item fs-5 p-2 bg-outline-primary"
+                          to="/dashboard"
+                        >
+                          Dashboard
+                        </Link>
+                      </li>
+                    )}
                     <li>
                       <button
                         className="dropdown-item fs-5 p-2 text-danger"

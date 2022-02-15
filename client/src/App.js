@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Checkout from "./components/Checkout/Checkout";
+import Dashboard from "./components/Dashboard/Dashboard";
 import Footer from "./components/Footer/Footer";
 import Home from "./components/Home/Home";
 import LogIn from "./components/Login/Login";
@@ -7,6 +8,7 @@ import Navbar from "./components/Navbar/Navbar";
 import NotFound from "./components/NotFound/NotFound";
 import Order from "./components/Order/Order";
 import OrderDetails from "./components/Order/OrderDetails";
+import AdminRoute from "./components/PrivateRoutes/AdminRoute";
 import PrivateRoute from "./components/PrivateRoutes/PrivateRoute";
 import ProductDetials from "./components/productDetails/ProductDetials";
 import Profile from "./components/Profile/Profile";
@@ -66,6 +68,15 @@ function App() {
             <PrivateRoute>
               <OrderDetails />
             </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <AdminRoute>
+              <Dashboard />
+            </AdminRoute>
           }
         />
       </Routes>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-
+import { motion } from "framer-motion";
 import {
   addToCartAction,
   allProductAction,
@@ -112,7 +112,10 @@ const Shop = () => {
             </div>
           </div>
           <div className="col-12 col-sm-12 col-md-8 col-lg-9 product-area">
-            <div className="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-5">
+            <motion.div
+              layout
+              className="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-5"
+            >
               {error ? (
                 <h1>Product not found</h1>
               ) : loading ? (
@@ -190,7 +193,7 @@ const Shop = () => {
                   </h1>
                 </div>
               )}
-            </div>
+            </motion.div>
 
             {!loading && result !== 0 && (
               <div className=" py-5">

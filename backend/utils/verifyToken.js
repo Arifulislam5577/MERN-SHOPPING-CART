@@ -26,3 +26,13 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
     throw new Error("Invalid Authorization ,No Token");
   }
 });
+
+export const verifyTokenAndAdmin = asyncHandler(async (req, res, next) => {
+  verifyToken(req, res, () => {
+    if (req.user.isAdmin) {
+      next();
+    } else {
+      res.status(403).json("You are not alowed to do that!");
+    }
+  });
+});

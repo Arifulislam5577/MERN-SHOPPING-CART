@@ -1,4 +1,7 @@
 import {
+  ADMIN_ORDER_FAIL,
+  ADMIN_ORDER_REQUEST,
+  ADMIN_ORDER_SUCCESS,
   NEW_ORDER_FAIL,
   NEW_ORDER_REQUEST,
   NEW_ORDER_SUCCESS,
@@ -80,6 +83,22 @@ export const userOrderReducer = (state = {}, action) => {
     case USER_ORDER_FAIL:
       return { loading: false, error: action.payload };
 
+    default:
+      return state;
+  }
+};
+
+export const adminOrderReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ADMIN_ORDER_REQUEST:
+      return { isLoading: true };
+    case ADMIN_ORDER_SUCCESS:
+      return {
+        isLoading: false,
+        adminOrder: action.payload,
+      };
+    case ADMIN_ORDER_FAIL:
+      return { isLoading: false, isError: action.payload };
     default:
       return state;
   }

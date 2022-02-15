@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  ADMIN_ORDER_FAIL,
+  ADMIN_ORDER_REQUEST,
+  ADMIN_ORDER_SUCCESS,
   NEW_ORDER_FAIL,
   NEW_ORDER_REQUEST,
   NEW_ORDER_SUCCESS,
@@ -135,6 +138,36 @@ export const getUserOrder = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_ORDER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.response,
+    });
+  }
+};
+
+export const getAllOrder = () => async (dispatch, getState) => {
+  dispatch({ type: ADMIN_ORDER_REQUEST });
+  const {
+    userLogin: { userInfo },
+  } = getState();
+  try {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(
+      `http://localhost:5000/api/v1/order/admin`,
+      config
+    );
+
+    dispatch({ type: ADMIN_ORDER_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_ORDER_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

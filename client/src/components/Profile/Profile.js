@@ -156,12 +156,13 @@ const Profile = () => {
               </h1>
             ) : (
               <>
-                <table className="table table-borderless">
+                <table className="table table-borderless table-hover table-striped">
                   <thead>
                     <tr>
                       <th scope="col">Order ID</th>
                       <th scope="col">Total Items</th>
                       <th scope="col">Total Price</th>
+                      <th scope="col">Paid Status</th>
                       <th scope="col">Status</th>
                     </tr>
                   </thead>
@@ -172,7 +173,7 @@ const Profile = () => {
                       </h1>
                     ) : (
                       order?.map((orderItems) => {
-                        const { _id, orderCalculation, isDelivered } =
+                        const { _id, orderCalculation, isDelivered, isPaid } =
                           orderItems;
                         return (
                           <tr
@@ -185,6 +186,7 @@ const Profile = () => {
                             <td>#{_id}</td>
                             <td>{orderCalculation?.totalItems}</td>
                             <td>${orderCalculation?.totalPrice}</td>
+                            <td>{isPaid ? "Paid" : "Unpaid"}</td>
                             <td>{isDelivered ? "Delivered" : "Pending"}</td>
                           </tr>
                         );
