@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Checkout from "./components/Checkout/Checkout";
+
 import Dashboard from "./components/Dashboard/Dashboard";
 import Footer from "./components/Footer/Footer";
 import Home from "./components/Home/Home";
@@ -38,14 +38,7 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/checkout"
-          element={
-            <PrivateRoute>
-              <Checkout />
-            </PrivateRoute>
-          }
-        />
+
         <Route
           path="/shipping"
           element={
